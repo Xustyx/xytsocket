@@ -6,37 +6,36 @@ import (
 )
 
 func main() {
-	address := uint(0x0059B3D8)
-	var csPlayer = new(xytsocket.ClassStruct)
-	csPlayer.Name = "Player"
-	csPlayer.Pointer = &address
-	csPlayer.Offset = 0x00
-	csPlayer.Type = xytsocket.STRUCT
-	csPlayer.Next = 0x48
+	var address = uint(0x0059B3D8)
 
-	var csName = new(xytsocket.ClassSpec)
-	csName.Name = "Name"
-	csName.Offset = 0x00
-	csName.Type = xytsocket.STRING
-	csName.Parent = csPlayer
+	var adrLstPlayerList = xytsocket.AddressList()
+	adrLstPlayerList.Name = "Player-list"
+	adrLstPlayerList.Pointer = &address
+	adrLstPlayerList.Offset = 0x00
+	adrLstPlayerList.Next = 0x48
+	adrLstPlayerList.Total = 2
 
+	var adrStPlayer = xytsocket.AddressStruct()
+	adrStPlayer.Name = "Player"
+	adrStPlayer.Offset = 0x00
 
-	var csId = new(xytsocket.ClassSpec)
-	csId.Name = "Id"
-	csId.Offset = 0x38
-	csId.Type = xytsocket.UINT
-	csId.Parent = csPlayer
+	var adrName = new(xytsocket.Address)
+	adrName.Name = "Name"
+	adrName.Offset = 0x00
+	adrName.Type = xytsocket.STRING
 
-	//Player 1
-	fmt.Printf("Player1 pos: %x\n", csPlayer.GetAddress(0))
-	fmt.Printf("Player1 pos: %x\n", csName.GetAddress(0))
-	fmt.Printf("Player1 pos: %x\n", csId.GetAddress(0))
+	var adrId = new(xytsocket.Address)
+	adrId.Name = "Id"
+	adrId.Offset = 0x38
+	adrId.Type = xytsocket.UINT
 
-	fmt.Println()
+	adrLstPlayerList.SetStruct(adrStPlayer)
+	adrStPlayer.AppendAddress(adrName)
+	adrStPlayer.AppendAddress(adrId)
 
-	//Player 2
-	fmt.Printf("Player2 pos: %x\n", csPlayer.GetAddress(1))
-	fmt.Printf("Player2 pos: %x\n", csName.GetAddress(1))
-	fmt.Printf("Player2 pos: %x\n", csId.GetAddress(1))
+	addresses := adrLstPlayerList.GetAddressMap(0)
 
+	for i, e := range addresses {
+		fmt.Printf("Address %d: %x\n", i ,e)
+	}
 }
