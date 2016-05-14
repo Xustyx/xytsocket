@@ -1,10 +1,6 @@
 package xytsocket
 
-import (
-	"errors"
-)
-
-
+import "errors"
 
 type Address struct {
 	Name    string 		`json:"name"`
